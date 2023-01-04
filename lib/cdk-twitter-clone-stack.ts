@@ -55,7 +55,11 @@ export class CdkTwitterCloneStack extends cdk.Stack {
     tweetsTable.grantReadWriteData(apiLambda);
 
     const api = new apigateway.LambdaRestApi(this, `${branch}-RestApi`, {
-      handler: apiLambda
+      handler: apiLambda,
+      defaultCorsPreflightOptions: {
+        allowOrigins: apigateway.Cors.ALL_METHODS,
+        allowMethods: apigateway.Cors.ALL_METHODS
+      }
     })
 
   }

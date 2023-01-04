@@ -11,11 +11,21 @@ export const getTweets = async (path: string, tableName: string, docClient: Dyna
     const results: DynamoDB.DocumentClient.ScanOutput = await docClient.scan(scanParams).promise();
     return {
       statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Headers" : "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET"
+    },
       body: JSON.stringify(results)
     }
   } catch (error) {
     return {
       statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Headers" : "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET"
+    },
       body: JSON.stringify(error)
     }
   }
