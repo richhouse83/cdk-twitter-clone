@@ -1,26 +1,37 @@
 import {APIGatewayProxyEvent, APIGatewayProxyResult} from 'aws-lambda';
-import { AWSError, DynamoDB } from 'aws-sdk';
+import { DynamoDB } from 'aws-sdk';
+import {v4 as uuid} from 'uuid';
 
 const docClient = new DynamoDB.DocumentClient();
 const userProfilesTable = process.env.userProfilesTable;
+const tweetsTable = process.env.tweetsTable;
 
 interface CreateUserBody {
   userId: String;
 }
+
+interface CreateTweetBody extends CreateUserBody {
+  tweetMessage: String;
+}
+
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const {httpMethod, path, body} = event;
 
 
-  if (httpMethod === 'POST' && path === "/create-user") {
+  if (path === "/create-user" && httpMethod === 'POST') {
     const parsedBody: CreateUserBody = body ? JSON.parse(body) : null;
-    if (!parsedBody) return {statusCode: 400, body: JSON.stringify({error: "No userId included in request"})};
+
+    if (!parsedBody?.userId) return {statusCode: 400, body: JSON.stringify({error: "No userId included in request"})};
+
     const params: DynamoDB.DocumentClient.PutItemInput = {
       TableName: userProfilesTable || "",
       Item: {
-        UserId: parsedBody.userId
+        UserId: parsedBody.userId,
+        CreatedDate: Date.now()
       },
       ConditionExpression: 'attribute_not_exists(UserId)'
     }
+
     try {
       await docClient.put(params).promise()
       return {
@@ -35,10 +46,61 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     }
   }
 
+  if (path === '/tweet' && httpMethod === 'POST') {
+    const {userId, tweetMessage}: CreateTweetBody = body ? JSON.parse(body) : {};
+
+    if (!userId || !tweetMessage) return {statusCode: 400, body: JSON.stringify({error: "UserId or Message missing in request"})};
+
+    try {
+      const checkForUserParams: DynamoDB.DocumentClient.GetItemInput = {
+        TableName: userProfilesTable || "",
+        Key: {
+          UserId: userId,
+        }
+      }
+
+      const checkForUserResponse = await docClient.get(checkForUserParams).promise();
+
+      if (!checkForUserResponse?.Item) return {
+        statusCode: 400,
+        body: JSON.stringify({message: 'User Not Found'})
+      }
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify(error)
+      }
+    }
+
+    const tweetParams: DynamoDB.DocumentClient.PutItemInput = {
+      TableName: tweetsTable || "",
+      Item: {
+        UserId: userId,
+        TweetId: uuid(),
+        Tweet: tweetMessage,
+        CreatedDate: Date.now()
+      },
+    }
+
+    try {
+      await docClient.put(tweetParams).promise();
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({message: `Tweet for ${userId} successfully added`})
+      }    
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify(error)
+      }
+    }
+  }
+
 
   return {
-    statusCode: 200,
-    body: JSON.stringify(event)
+    statusCode: 404,
+    body: JSON.stringify({ message: 'Method not supported'})
   }
 }
 

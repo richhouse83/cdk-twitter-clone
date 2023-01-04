@@ -16,6 +16,7 @@
     "@types/aws-sdk": "^2.7.0",
     "@types/jest": "^29.2.4",
     "@types/node": "18.11.15",
+    "@types/uuid": "^9.0.0",
     "aws-cdk": "2.59.0",
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1287.0",
@@ -28,6 +29,7 @@
   "dependencies": {
     "aws-cdk-lib": "2.59.0",
     "constructs": "^10.0.0",
-    "source-map-support": "^0.5.21"
+    "source-map-support": "^0.5.21",
+    "uuid": "^9.0.0"
   }
 }

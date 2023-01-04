@@ -20,6 +20,19 @@ export class CdkTwitterCloneStack extends cdk.Stack {
       },
     });
 
+    const tweetsTable= new dynamoDb.Table(this, 'tweetsTable', {
+      tableName: 'tweetMessagesTable',
+      billingMode: dynamoDb.BillingMode.PAY_PER_REQUEST,
+      partitionKey: {
+        name: 'UserId',
+        type: dynamoDb.AttributeType.STRING,
+      },
+      sortKey: {
+        name: 'TweetId',
+        type: dynamoDb.AttributeType.STRING
+      }
+    })
+
     const apiLambda = new NodejsFunction(this, 'apiLambda', {
       memorySize: 1024,
       timeout: cdk.Duration.seconds(5),
@@ -27,11 +40,14 @@ export class CdkTwitterCloneStack extends cdk.Stack {
       handler: 'handler',
       entry: path.join(__dirname, `/lambdas/apilambda.ts`),
       environment: {
-        userProfilesTable: userProfilesTable.tableName
-      }
+        userProfilesTable: userProfilesTable.tableName,
+        tweetsTable: tweetsTable.tableName,
+      },
+      logRetention: cdk.aws_logs.RetentionDays.ONE_DAY
     });
 
     userProfilesTable.grantReadWriteData(apiLambda);
+    tweetsTable.grantReadWriteData(apiLambda);
 
     const api = new apigateway.LambdaRestApi(this, 'LambdaRestApi', {
       handler: apiLambda
