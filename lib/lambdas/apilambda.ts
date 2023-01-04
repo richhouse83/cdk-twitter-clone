@@ -2,6 +2,7 @@ import {APIGatewayProxyEvent, APIGatewayProxyResult} from 'aws-lambda';
 import { DynamoDB } from 'aws-sdk';
 import { createUser } from './data-handlers/create-user';
 import { tweet } from './data-handlers/tweet';
+import { getTweets } from './data-handlers/get-tweets';
 
 const docClient = new DynamoDB.DocumentClient();
 const userProfilesTable = process.env.userProfilesTable;
@@ -18,6 +19,12 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
   if (path === '/tweet' && httpMethod === 'POST') {
     const result = await tweet(body ?? "", userProfilesTable ?? "", tweetsTable ?? "", docClient)
+    return result;
+  }
+
+  if (path.startsWith('/tweets') && httpMethod === 'GET') {
+    const result = await getTweets(path, tweetsTable ?? "", docClient)
+    return result;
   }
 
 
@@ -38,7 +45,7 @@ Example Event:
   "queryStringParameters": null,
   "multiValueQueryStringParameters": null,
   "pathParameters": {
-    "proxy": "create-user:"
+    "proxy": "create-user"
   },
   "stageVariables": null,
   "requestContext": {
