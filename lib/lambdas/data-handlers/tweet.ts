@@ -25,11 +25,21 @@ export const tweet = async (body: string, userProfilesTable: string, tweetsTable
 
       if (!checkForUserResponse?.Item) return {
         statusCode: 400,
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST"
+        },
         body: JSON.stringify({message: 'User Not Found'})
       }
     } catch (error) {
       return {
         statusCode: 500,
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST"
+        },
         body: JSON.stringify(error)
       }
     }
@@ -49,11 +59,21 @@ export const tweet = async (body: string, userProfilesTable: string, tweetsTable
 
       return {
         statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST"
+        },
         body: JSON.stringify({message: `Tweet for ${userId} successfully added`})
       }    
     } catch (error) {
       return {
         statusCode: 500,
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST"
+        },
         body: JSON.stringify(error)
       }
     }

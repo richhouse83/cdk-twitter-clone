@@ -57,7 +57,7 @@ export class CdkTwitterCloneStack extends cdk.Stack {
     const api = new apigateway.LambdaRestApi(this, `${branch}-RestApi`, {
       handler: apiLambda,
       defaultCorsPreflightOptions: {
-        allowOrigins: apigateway.Cors.ALL_METHODS,
+        allowOrigins: apigateway.Cors.ALL_ORIGINS,
         allowMethods: apigateway.Cors.ALL_METHODS
       }
     })

@@ -23,11 +23,21 @@ export const createUser = async (body: string, tableName: string, docClient: Dyn
       await docClient.put(params).promise()
       return {
         statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST"
+        },
         body: JSON.stringify({message: `userID ${parsedBody.userId} successfully added`})
       }    
     } catch (error) {
       return {
         statusCode: 500,
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST"
+        },
         body: JSON.stringify(error)
       }
     }

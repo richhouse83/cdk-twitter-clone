@@ -3,6 +3,7 @@ import { DynamoDB } from 'aws-sdk';
 import { createUser } from './data-handlers/create-user';
 import { tweet } from './data-handlers/tweet';
 import { getTweets } from './data-handlers/get-tweets';
+import { getUser } from './data-handlers/get-user';
 
 const docClient = new DynamoDB.DocumentClient();
 const userProfilesTable = process.env.userProfilesTable;
@@ -27,13 +28,30 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     return result;
   }
 
+  if (path.startsWith('/get-user') && httpMethod === 'GET') {
+    const result = await getUser(path, userProfilesTable ?? "", docClient)
+    return result;
+  }
+
+  if (path.startsWith('/ping') && httpMethod == 'GET') {
+    return {
+      statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET"
+  },
+    body: JSON.stringify({ ping: 'twitter-clone-ping'})
+    }
+  }
+
 
   return {
     statusCode: 404,
     headers: {
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+      "Access-Control-Allow-Methods": "POST,GET"
   },
     body: JSON.stringify({ message: 'Method not supported'})
   }
