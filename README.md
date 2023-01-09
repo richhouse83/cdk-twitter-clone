@@ -69,9 +69,25 @@ The simplest solution (with the provided lambda) is to create a [Lambda Rest Api
 
 ## API details
 
-Depending on whether you are using the proxy endpoint or a different approach, you will need to define the following paths, either in the Lambda (done for you in the provided code) or defined in API Gateway
+Depending on whether you are using the proxy endpoint or a different approach, you will need to define the following paths, either in the Lambda (done for you in the provided code) or defined in API Gateway, to work with the supplied front end.
 
-- GET /tweets - Returns all tweets in the tweets table. If path includes /{userId}, will return only the tweets from that user
+- `GET /tweets` Returns all tweets in the tweets table. If path includes `/{userId}`, will return only the tweets from that user
+- `GET /user` Returns with a 200 if a user exists in the user profile table, otherwise returns a 404
+- `POST /create-user` Adds a user to the user table, requires the JSON body:
+```
+{
+  "userId": USERNAME
+}
+```
+
+- `POST /tweet` Adds a tweet for the supplied userId, which must exist within the user table. Requires the JSON body:
+
+```
+{
+  "userId": USERNAME,
+  "tweetMessage": MESSAGE
+}
+```
 
 
 ## Deploying to AWS
@@ -97,8 +113,17 @@ The cli will give you a breakdown of any new or uopdated IAM permissions for you
 4. Copy the 'Invoke URL' address
 5. Navigate back to the [front end app](http://serverless-twitter-clone.s3-website.eu-west-2.amazonaws.com/)
 6. Paste your api address into the text input at the top of the page and click 'Update Base URL' 
-7. The app will ping the API and report back if it has been successful 
+7. The app will ping the API and report back if it has been successful
 
+## Extensions/ Expansions
+
+- Add proper login/ password protection with Cognito, includer Avatars, etc
+- Use a Step Function to detect sentiment, remove coarse language
+- Split Lambdas for individual tasks
+- Allow replies to tweets, images and more
+- Subscribe/Follow and timeline customisation
+
+## Other Info
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
