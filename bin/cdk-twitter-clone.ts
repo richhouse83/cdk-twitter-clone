@@ -7,6 +7,7 @@ class GenerateTwitterCloneApp extends cdk.App {
   constructor() {
     super();
 
+    // DO NOT EDIT BELOW UNLESS YOU KNOW WHAT YOU ARE DOING!
     const branch: string = this.node.tryGetContext('branch');
     if (!branch) {
       throw new Error('Branch is required!');

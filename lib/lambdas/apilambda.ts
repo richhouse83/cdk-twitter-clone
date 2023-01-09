@@ -28,7 +28,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     return result;
   }
 
-  if (path.startsWith('/get-user') && httpMethod === 'GET') {
+  if (path.startsWith('/user') && httpMethod === 'GET') {
     const result = await getUser(path, userProfilesTable ?? "", docClient)
     return result;
   }

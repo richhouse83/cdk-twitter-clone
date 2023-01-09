@@ -3,7 +3,7 @@ import { DynamoDB } from "aws-sdk";
 
 
 export const getUser = async (path: string, tableName: string, docClient: DynamoDB.DocumentClient): Promise<APIGatewayProxyResult> => {
-  const userId = path.replace('/get-user', '').replace(/\//, '');
+  const userId = path.replace('/user', '').replace(/\//, '');
 
     if (!userId) return {statusCode: 400, body: JSON.stringify({error: "No userId included in request"})};
 
