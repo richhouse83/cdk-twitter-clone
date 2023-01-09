@@ -4,7 +4,7 @@ This project is designed to give a basic introduction to building a Serverless b
 
 ## Setup Steps
 
-1. Head to the [front end app](http://serverless-twitter-clone.s3-website.eu-west-2.amazonaws.com/index.html) and take a look.
+1. Head to the supplied [front end app](http://serverless-twitter-clone.s3-website.eu-west-2.amazonaws.com/index.html) and take a look. This is only a basic demonstration and keeps no local data, dfoesn't require passwords to log in etc.
 
 2. Clone this repo to your local machine.
 
@@ -19,7 +19,7 @@ The project has been built with the following infrastructure in mind, however th
 Use the CDK documentation [here](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-construct-library.html) to design your solution.
 
 ## Important! ## 
-When naming your DB tables, stacks and constructs with the branh name, which is added in to your context via the cli commands when deploying.
+When naming your DB tables, stacks and constructs with the branch name, which is added in to your context via the cli commands when deploying.
 
 It comes into your stack inside of bin/cdk-twitter-clone.ts, DO NOT EDIT THESE LINES UNLESS YOU KNOW WHAT YOU ARE DOING:
 
@@ -115,9 +115,13 @@ The cli will give you a breakdown of any new or uopdated IAM permissions for you
 6. Paste your api address into the text input at the top of the page and click 'Update Base URL' 
 7. The app will ping the API and report back if it has been successful
 
+## Example solution
+
+An example solution exists on branch solution-1, however this is only meant as a guide and your solution does not need to be the same.
+
 ## Extensions/ Expansions
 
-- Add proper login/ password protection with Cognito, includer Avatars, etc
+- Add proper login/ password protection with Cognito, include Avatars, etc
 - Use a Step Function to detect sentiment, remove coarse language
 - Split Lambdas for individual tasks
 - Allow replies to tweets, images and more
