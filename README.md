@@ -1,6 +1,6 @@
 # Serverless Twitter Clone - Back end project
 
-This project is designed to give a basic introduction to building a Serverless back end on AWS, using CDK.
+This project is designed to give a basic introduction to building a Serverless back end on AWS, using CDK. Rich is a prick
 
 ## Setup Steps
 
