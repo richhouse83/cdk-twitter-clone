@@ -1,10 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import * as apigateway from 'aws-cdk-lib/aws-apigateway';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as path from 'path';
-import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
-import * as dynamoDb from 'aws-cdk-lib/aws-dynamodb';
 
 interface CdkTwitterCloneStackProps extends cdk.StackProps {
    branch: String;
@@ -14,53 +9,19 @@ export class CdkTwitterCloneStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: CdkTwitterCloneStackProps) {
     super(scope, id, props);
 
+    // Use this variable naming your tables and constructs, in order to
+    // stop conflicts with other branches
     const { branch } = props;
 
-    const userProfilesTable = new dynamoDb.Table(this, `${branch}-userTable`, {
-      tableName: `${branch}-userTable`,
-      billingMode: dynamoDb.BillingMode.PAY_PER_REQUEST,
-      partitionKey: {
-        name: 'UserId',
-        type: dynamoDb.AttributeType.STRING,
-      },
-    });
+    // Suggested solution part 1 - Create 2 DynamoDB tables, for UserProfiles and Tweets
 
-    const tweetsTable = new dynamoDb.Table(this, `${branch}-tweetTable`, {
-      tableName: `${branch}-tweetTable`,
-      billingMode: dynamoDb.BillingMode.PAY_PER_REQUEST,
-      partitionKey: {
-        name: 'UserId',
-        type: dynamoDb.AttributeType.STRING,
-      },
-      sortKey: {
-        name: 'TweetId',
-        type: dynamoDb.AttributeType.STRING
-      }
-    })
 
-    const apiLambda = new NodejsFunction(this, `${branch}-ApiLambda`, {
-      memorySize: 1024,
-      timeout: cdk.Duration.seconds(5),
-      runtime: lambda.Runtime.NODEJS_18_X,
-      handler: 'handler',
-      entry: path.join(__dirname, `/lambdas/apilambda.ts`),
-      environment: {
-        userProfilesTable: userProfilesTable.tableName,
-        tweetsTable: tweetsTable.tableName,
-      },
-      logRetention: cdk.aws_logs.RetentionDays.ONE_DAY
-    });
 
-    userProfilesTable.grantReadWriteData(apiLambda);
-    tweetsTable.grantReadWriteData(apiLambda);
+    // Suggested solution part 2 - Use the lambda code located in /lambdas/apilambda.ts 
+    // to create a NodejsFunction construct, passing in your tables as environment variables
+    // DON'T FORGET TO GRANT PERMISSIONS!
 
-    const api = new apigateway.LambdaRestApi(this, `${branch}-RestApi`, {
-      handler: apiLambda,
-      defaultCorsPreflightOptions: {
-        allowOrigins: apigateway.Cors.ALL_ORIGINS,
-        allowMethods: apigateway.Cors.ALL_METHODS
-      }
-    })
+    // Suggested solution part 3 - Pass in your lmabda into a LambdaRestApi proxy gateway 
 
   }
 }
