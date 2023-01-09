@@ -12,6 +12,8 @@ This project is designed to give a basic introduction to building a Serverless b
 
 4. Create a new branch, run `npm i` to install dependencies
 
+5. You may want to [install the CDK cli globally](https://docs.aws.amazon.com/cdk/v2/guide/cli.html)
+
 ## Instructions
 
 The project has been built with the following infrastructure in mind, however there are multiple ways to achieve the same result. In addition the project can be expanded on in different ways, some of which are mentioned at the end of this document. Feel free to experiment.
