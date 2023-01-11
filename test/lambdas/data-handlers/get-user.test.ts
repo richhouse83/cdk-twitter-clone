@@ -1,7 +1,6 @@
 import * as AWSMock from 'aws-sdk-mock';
 import * as AWS from 'aws-sdk';
 import { getUser } from '../../../lib/lambdas/data-handlers/get-user';
-import { GetItemInput } from 'aws-sdk/clients/dynamodb';
 
 describe('get-user tests', () => {
 

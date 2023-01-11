@@ -1,7 +1,7 @@
 import * as AWSMock from 'aws-sdk-mock';
 import * as AWS from 'aws-sdk';
 import { createUser } from '../../../lib/lambdas/data-handlers/create-user';
-import { GetItemInput, PutItemInput } from 'aws-sdk/clients/dynamodb';
+import { PutItemInput } from 'aws-sdk/clients/dynamodb';
 
 describe('Create-user unit tests', () => {
   test('Is a function', async () => {
