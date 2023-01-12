@@ -12,6 +12,7 @@ describe('tweet tests', () => {
     userId: testUser,
     tweetMessage: testMessage,
   }
+  
   test('Succesfully calls get and put if correct data passed and userId exists', async () => {
     AWSMock.setSDKInstance(AWS);
 
